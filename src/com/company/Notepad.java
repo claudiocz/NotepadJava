@@ -1,8 +1,9 @@
 package com.company;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 
 public class Notepad extends JFrame {
 
@@ -54,15 +55,14 @@ public class Notepad extends JFrame {
         setVisible(true);
         setSize(900, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setDefaultLookAndFeelDecorated(true);
         setLayout(null);
 
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
         editableArea = new JTextArea();
-        editableArea.setBounds(20, 500, 0, 0);
-        add(editableArea);
+
+        setContentPane(editableArea);
 
         // Inicializanco los Menus
         menuFile = new JMenu("Archivo");
@@ -149,12 +149,41 @@ public class Notepad extends JFrame {
         new1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Notepad nuevo = new Notepad();
-                nuevo.setVisible(true);
 
             }
         });
 
+
+        open.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Abrir();
+            }
+        });
+
+        //guardar cambios
+        save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Guardar();
+            }
+        });
+
+        //como guardar
+        howSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        print.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
         //salir de Notepad
         exit.addActionListener(new ActionListener() {
@@ -164,6 +193,72 @@ public class Notepad extends JFrame {
             }
         });
 
+
+        //ACCIONES DE MENU EDIT
+
+        undo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+
+    }
+
+    public void Nuevo(){
+
+
+
+    }
+
+    public void Abrir() {
+        String aux = "";
+        String texto = "";
+
+        try {
+            JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
+            fc.showOpenDialog(this);
+            File archivo = fc.getSelectedFile();
+            if (archivo != null) {
+                FileReader archivos = new FileReader(archivo);
+                BufferedReader leer = new BufferedReader(archivos);
+                while ((aux = leer.readLine()) != null) {
+                    texto += aux + "\n";
+                }
+                leer.close();
+            }
+        }catch (IOException e){
+            JOptionPane.showMessageDialog(null, "Error importando -" + e);
+        }
+        editableArea.setText(texto);
+
+
+
+
+    }
+
+    //Método para guardar en un archivo
+    public void Guardar() {
+
+        try {
+
+            String nombre = "";
+            JFileChooser saveFile = new JFileChooser(System.getProperty("D:\\CURSO DESARROLLO EN JAVA\\NavegacionJavaSwing\\src\\recursos\\docs"));
+            saveFile.showSaveDialog(this);
+            File guardar = saveFile.getSelectedFile();
+
+            if (guardar != null) {
+                nombre = saveFile.getSelectedFile().getName();
+
+                FileWriter guardado = new FileWriter(guardar);
+                guardado.write(editableArea.getText());
+                guardado.close();
+
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
 
     }
 
